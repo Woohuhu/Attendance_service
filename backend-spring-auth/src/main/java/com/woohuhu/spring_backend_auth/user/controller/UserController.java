@@ -17,7 +17,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/v1/user")
+    @GetMapping("/v1/user/{id}")
     public UserDto getUser(@PathVariable @Valid String id) throws Exception {
         return userService.getUser(id);
     }
