@@ -1,4 +1,4 @@
-package com.woohuhu.spring_backend_auth.user.Dto;
+package com.woohuhu.spring_backend_auth.user.dto;
 
 import lombok.*;
 

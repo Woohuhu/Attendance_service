@@ -4,7 +4,7 @@
 
 <mapper namespace="com.woohuhu.spring_backend_auth.user.dao.UserDao">
 
-    <select id="findUser" parameterType="string" resultType="com.woohuhu.spring_backend_auth.user.Dto.UserDto">
+    <select id="findUser" parameterType="string" resultType="com.woohuhu.spring_backend_auth.user.dto.UserDto">
         SELECT * FROM user WHERE id = #{id}
     </select>
 
