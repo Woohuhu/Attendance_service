@@ -1,10 +1,11 @@
 package com.woohuhu.spring_backend_auth.user.service;
 
-import com.woohuhu.spring_backend_auth.user.dto.UserDto;
+import com.woohuhu.spring_backend_auth.user.dto.*;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface UserService {
     UserDto getUser(String id) throws Exception;
     int createUser(UserDto userDto) throws Exception;
+    UserDto authenticate(LoginRequestDto loginRequestDto) throws Exception;
 }

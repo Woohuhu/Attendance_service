@@ -1,17 +1,19 @@
 package com.woohuhu.spring_backend_auth.user.service;
 
+import com.auth0.jwt.algorithms.Algorithm;
 import com.woohuhu.spring_backend_auth.user.dao.UserDao;
+import com.woohuhu.spring_backend_auth.user.dto.*;
 import com.woohuhu.spring_backend_auth.user.exception.UserExsitedException;
 import com.woohuhu.spring_backend_auth.user.exception.UserNotFoundException;
+import com.woohuhu.spring_backend_auth.user.exception.UserUnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.woohuhu.spring_backend_auth.user.dto.UserDto;
 
 import static java.util.Objects.isNull;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
@@ -20,19 +22,19 @@ public class UserServiceImpl implements UserService{
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDto getUser(String id) throws Exception{
+    public UserDto getUser(String id) throws Exception {
         UserDto userDto = userDao.getUser(id);
 
-        if(isNull(userDto)){
+        if (isNull(userDto)) {
             throw new UserNotFoundException();
         }
         return userDto;
     }
 
     @Override
-    public int createUser(UserDto userDto) throws Exception{
+    public int createUser(UserDto userDto) throws Exception {
         UserDto exsited = userDao.getUser(userDto.getId());
-        if(!isNull(exsited)){
+        if (!isNull(exsited)) {
             throw new UserExsitedException();
         }
         String encodedPassword = passwordEncoder.encode(userDto.getPassword());
@@ -42,5 +44,20 @@ public class UserServiceImpl implements UserService{
                 .name(userDto.getName())
                 .build();
         return userDao.createUser(newUser);
+    }
+
+    @Override
+    public UserDto authenticate(LoginRequestDto loginRequestDto) throws Exception {
+        UserDto userDto = userDao.getUser(loginRequestDto.getId());
+
+        if (isNull(userDto)) {
+            throw new UserNotFoundException();
+        }
+
+        if(!passwordEncoder.matches(loginRequestDto.getPassword(), userDto.getPassword())) {
+            throw new UserUnauthorizedException();
+        }
+
+        return userDto;
     }
 }
