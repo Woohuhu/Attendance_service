@@ -1,6 +1,7 @@
 package com.woohuhu.spring_backend_auth.user.controller;
 
-import com.woohuhu.spring_backend_auth.user.dto.UserDto;
+import com.woohuhu.spring_backend_auth.global.service.JWTService;
+import com.woohuhu.spring_backend_auth.user.dto.*;
 import com.woohuhu.spring_backend_auth.user.service.UserService;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JWTService jwtService;
+
     @GetMapping("/v1/user/{id}")
     public ResponseEntity<?> getUser(@PathVariable @Valid String id) throws Exception {
         Object res = userService.getUser(id);
@@ -26,8 +30,20 @@ public class UserController {
     }
 
     @PostMapping("/v1/user")
-    public ResponseEntity<?> createUser(@RequestBody UserDto userDto) throws Exception{
+    public ResponseEntity<?> createUser(@RequestBody UserDto userDto) throws Exception {
         Object res = userService.createUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
+    }
+
+    @PostMapping("/v1/login")
+    public ResponseEntity<?> authenticate(@RequestBody LoginRequestDto loginRequestDto) throws Exception {
+        UserDto userDto = userService.authenticate(loginRequestDto);
+        String accessToken = jwtService.generateAccessToken(userDto);
+        LoginResponseDto loginResponseDto = LoginResponseDto.builder()
+                .accessToken(accessToken)
+                .id(userDto.getId())
+                .name(userDto.getName())
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponseDto);
     }
 }
