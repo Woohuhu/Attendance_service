@@ -7,4 +7,9 @@
         SELECT * FROM user WHERE id = #{id}
     </select>
 
+    <insert id="createUser" parameterType="com.woohuhu.spring_backend_auth.user.dto.UserDto">
+        INSERT INTO user(`id`, `name`, `password`)
+        VALUES (#{id}, #{name}, #{password})
+    </insert>
+
 </mapper>
