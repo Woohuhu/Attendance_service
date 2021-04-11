@@ -1,5 +1,7 @@
 package com.woohuhu.spring_backend_auth.user.controller;
 
+import com.woohuhu.spring_backend_auth.global.dto.Response;
+import com.woohuhu.spring_backend_auth.global.dto.StatusCode;
 import com.woohuhu.spring_backend_auth.global.service.JWTService;
 import com.woohuhu.spring_backend_auth.user.dto.*;
 import com.woohuhu.spring_backend_auth.user.service.UserService;
@@ -24,19 +26,19 @@ public class UserController {
     private JWTService jwtService;
 
     @GetMapping("/v1/user/{id}")
-    public ResponseEntity<?> getUser(@PathVariable @Valid String id) throws Exception {
-        Object res = userService.getUser(id);
-        return ResponseEntity.status(HttpStatus.OK).body(res);
+    public ResponseEntity getUser(@PathVariable @Valid String id) throws Exception {
+        Object result = userService.getUser(id);
+        return new ResponseEntity(Response.response(StatusCode.OK, "사용자 조회 성공", result), HttpStatus.OK);
     }
 
     @PostMapping("/v1/user")
-    public ResponseEntity<?> createUser(@RequestBody UserDto userDto) throws Exception {
-        Object res = userService.createUser(userDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(res);
+    public ResponseEntity createUser(@RequestBody UserDto userDto) throws Exception {
+        userService.createUser(userDto);
+        return new ResponseEntity(Response.response(StatusCode.OK, "회원가입 성공"), HttpStatus.CREATED);
     }
 
     @PostMapping("/v1/login")
-    public ResponseEntity<?> authenticate(@RequestBody LoginRequestDto loginRequestDto) throws Exception {
+    public ResponseEntity authenticate(@RequestBody LoginRequestDto loginRequestDto) throws Exception {
         UserDto userDto = userService.authenticate(loginRequestDto);
         String accessToken = jwtService.generateAccessToken(userDto);
         LoginResponseDto loginResponseDto = LoginResponseDto.builder()
@@ -44,6 +46,6 @@ public class UserController {
                 .id(userDto.getId())
                 .name(userDto.getName())
                 .build();
-        return ResponseEntity.status(HttpStatus.OK).body(loginResponseDto);
+        return new ResponseEntity(Response.response(StatusCode.OK, "로그인 성공", loginResponseDto), HttpStatus.OK);
     }
 }
