@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UserService {
     UserDto getUser(String id) throws Exception;
+
     int createUser(UserDto userDto) throws Exception;
+
     UserDto authenticate(LoginRequestDto loginRequestDto) throws Exception;
+
+    int createRefreshToken(String id, String refreshToken) throws Exception;
 }
