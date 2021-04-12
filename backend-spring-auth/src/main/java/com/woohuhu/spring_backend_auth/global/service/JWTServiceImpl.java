@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class JWTServiceImpl implements JWTService{
+public class JWTServiceImpl implements JWTService {
 
     @Value("${AccessTokenSecretKey}")
     private String AccessTokenSecretKey;
+
+    @Value("${RefreshTokenSecretKey")
+    private String RefreshTokenSecretKey;
 
     @Override
     public String generateAccessToken(UserDto userDto) {
@@ -23,7 +26,20 @@ public class JWTServiceImpl implements JWTService{
                     .sign(algorithm);
             return accessToken;
         } catch (JWTCreationException exception) {
-            throw  exception;
+            throw exception;
+        }
+    }
+
+    @Override
+    public String generateRefreshToken(String id) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(RefreshTokenSecretKey);
+            String refreshToken = JWT.create()
+                    .withClaim("id", id)
+                    .sign(algorithm);
+            return refreshToken;
+        } catch (JWTCreationException exception) {
+            throw exception;
         }
     }
 }
