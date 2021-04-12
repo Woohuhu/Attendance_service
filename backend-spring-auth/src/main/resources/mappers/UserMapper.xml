@@ -12,4 +12,8 @@
         VALUES (#{id}, #{name}, #{password})
     </insert>
 
+    <insert id="createRefreshToken" parameterType="com.woohuhu.spring_backend_auth.user.dto.RefreshTokenDto">
+        INSERT INTO refreshtoken(`id`, `token`)
+        VALUES (#{id}, #{token})
+    </insert>
 </mapper>
