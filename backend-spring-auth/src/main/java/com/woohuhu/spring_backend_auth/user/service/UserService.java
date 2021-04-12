@@ -12,4 +12,6 @@ public interface UserService {
     UserDto authenticate(LoginRequestDto loginRequestDto) throws Exception;
 
     int createRefreshToken(String id, String refreshToken) throws Exception;
+
+    int deleteRefreshToken(String id) throws Exception;
 }

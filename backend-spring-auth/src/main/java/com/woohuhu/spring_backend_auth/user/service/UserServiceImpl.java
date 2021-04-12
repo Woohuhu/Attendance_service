@@ -69,4 +69,11 @@ public class UserServiceImpl implements UserService {
                 .build();
         return userDao.createRefreshToken(newRefreshToken);
     }
+
+    @Override
+    public int deleteRefreshToken(String id) throws Exception {
+        int result = userDao.deleteRefreshToken(id);
+
+        return result;
+    }
 }
