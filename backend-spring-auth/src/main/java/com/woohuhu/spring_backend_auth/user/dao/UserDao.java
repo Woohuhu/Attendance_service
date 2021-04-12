@@ -11,4 +11,8 @@ public interface UserDao {
     int createUser(UserDto userDto) throws Exception;
 
     int createRefreshToken(RefreshTokenDto refreshTokenDto) throws Exception;
+
+    int getRefreshToken(String id) throws Exception;
+
+    int deleteRefreshToken(String id) throws Exception;
 }
