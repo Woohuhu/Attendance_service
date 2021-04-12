@@ -16,4 +16,13 @@
         INSERT INTO refreshtoken(`id`, `token`)
         VALUES (#{id}, #{token})
     </insert>
+
+    <select id="getRefreshToken" parameterType="string"
+            resultType="com.woohuhu.spring_backend_auth.user.dto.RefreshTokenDto">
+        SELECT * FROM refreshtoken where id = #{id}
+    </select>
+
+    <delete id="deleteRefreshToken" parameterType="string">
+        DELETE FROM refreshtoken WHERE id = #{id}
+    </delete>
 </mapper>
