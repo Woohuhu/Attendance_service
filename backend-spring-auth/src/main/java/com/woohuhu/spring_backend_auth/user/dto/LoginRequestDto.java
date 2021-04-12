@@ -12,8 +12,12 @@ import javax.validation.constraints.NotNull;
 @Builder
 
 public class LoginRequestDto {
-    @NotEmpty @NotBlank @NotNull
+    @NotEmpty
+    @NotBlank
+    @NotNull
     private String id;
-    @NotEmpty @NotBlank @NotNull
+    @NotEmpty
+    @NotBlank
+    @NotNull
     private String password;
 }
