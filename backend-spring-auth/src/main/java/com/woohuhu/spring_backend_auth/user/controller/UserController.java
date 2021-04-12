@@ -1,8 +1,7 @@
 package com.woohuhu.spring_backend_auth.user.controller;
 
-import com.woohuhu.spring_backend_auth.global.dto.Response;
-import com.woohuhu.spring_backend_auth.global.dto.StatusCode;
-import com.woohuhu.spring_backend_auth.global.service.JWTService;
+import com.woohuhu.spring_backend_auth.global.dto.*;
+import com.woohuhu.spring_backend_auth.global.service.*;
 import com.woohuhu.spring_backend_auth.user.dto.*;
 import com.woohuhu.spring_backend_auth.user.service.UserService;
 import org.mybatis.spring.annotation.MapperScan;
@@ -12,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
@@ -24,6 +25,9 @@ public class UserController {
 
     @Autowired
     private JWTService jwtService;
+
+    @Autowired
+    private CookieService cookieService;
 
     @GetMapping("/v1/user/{id}")
     public ResponseEntity getUser(@PathVariable @Valid String id) throws Exception {
@@ -38,9 +42,16 @@ public class UserController {
     }
 
     @PostMapping("/v1/login")
-    public ResponseEntity authenticate(@RequestBody LoginRequestDto loginRequestDto) throws Exception {
+    public ResponseEntity authenticate(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) throws Exception {
         UserDto userDto = userService.authenticate(loginRequestDto);
         String accessToken = jwtService.generateAccessToken(userDto);
+
+        String refreshToken = jwtService.generateRefreshToken(userDto.getId());
+        userService.createRefreshToken(userDto.getId(), refreshToken);
+
+        Cookie RefreshToken = cookieService.createCookie("refreshtoken", refreshToken);
+        response.addCookie(RefreshToken);
+
         LoginResponseDto loginResponseDto = LoginResponseDto.builder()
                 .accessToken(accessToken)
                 .id(userDto.getId())
