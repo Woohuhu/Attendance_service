@@ -59,4 +59,10 @@ public class UserController {
                 .build();
         return new ResponseEntity(Response.response(StatusCode.OK, "로그인 성공", loginResponseDto), HttpStatus.OK);
     }
+
+    @DeleteMapping("/v1/refreshToken/{id}")
+    public ResponseEntity deleteRefreshToken(@PathVariable @Valid String id) throws Exception {
+        Object result = userService.deleteRefreshToken(id);
+        return new ResponseEntity(Response.response(StatusCode.OK, "토큰 삭제 성공", result), HttpStatus.OK);
+    }
 }
