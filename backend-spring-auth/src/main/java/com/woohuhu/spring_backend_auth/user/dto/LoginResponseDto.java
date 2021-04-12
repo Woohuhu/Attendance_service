@@ -12,10 +12,16 @@ import javax.validation.constraints.NotNull;
 @Builder
 
 public class LoginResponseDto {
-    @NotEmpty @NotBlank @NotNull
+    @NotEmpty
+    @NotBlank
+    @NotNull
     private String accessToken;
-    @NotEmpty @NotBlank @NotNull
+    @NotEmpty
+    @NotBlank
+    @NotNull
     private String id;
-    @NotEmpty @NotBlank @NotNull
+    @NotEmpty
+    @NotBlank
+    @NotNull
     private String name;
 }
