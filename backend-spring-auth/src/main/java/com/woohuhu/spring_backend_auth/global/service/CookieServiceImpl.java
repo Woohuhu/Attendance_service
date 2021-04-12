@@ -1,10 +1,12 @@
 package com.woohuhu.spring_backend_auth.global.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+@Service
 public class CookieServiceImpl implements CookieService{
 
     @Value("${RefreshTokenExpires}")
