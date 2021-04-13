@@ -5,8 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.woohuhu.spring_backend_auth.user.dto.UserDto;
+import com.woohuhu.spring_backend_auth.user.dto.UserInfoDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -28,14 +27,14 @@ public class JWTServiceImpl implements JWTService {
     private Long RefreshTokenExpires;
 
     @Override
-    public String generateAccessToken(UserDto userDto) {
+    public String generateAccessToken(UserInfoDto userInfoDto) {
         try {
             Date ext = new Date();
             ext.setTime(ext.getTime() + AccessTokenExpires);
             Algorithm algorithm = Algorithm.HMAC256(AccessTokenSecretKey);
             String accessToken = JWT.create()
-                    .withClaim("id", userDto.getId())
-                    .withClaim("name", userDto.getName())
+                    .withClaim("id", userInfoDto.getId())
+                    .withClaim("name", userInfoDto.getName())
                     .withExpiresAt(ext)
                     .sign(algorithm);
             return accessToken;

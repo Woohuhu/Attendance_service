@@ -1,8 +1,10 @@
 package com.woohuhu.spring_backend_auth.user.service;
 
-import com.auth0.jwt.algorithms.Algorithm;
 import com.woohuhu.spring_backend_auth.user.dao.UserDao;
-import com.woohuhu.spring_backend_auth.user.dto.*;
+import com.woohuhu.spring_backend_auth.user.dto.LoginRequestDto;
+import com.woohuhu.spring_backend_auth.user.dto.RefreshTokenDto;
+import com.woohuhu.spring_backend_auth.user.dto.UserDto;
+import com.woohuhu.spring_backend_auth.user.dto.UserInfoDto;
 import com.woohuhu.spring_backend_auth.user.exception.UserExsitedException;
 import com.woohuhu.spring_backend_auth.user.exception.UserNotFoundException;
 import com.woohuhu.spring_backend_auth.user.exception.UserUnauthorizedException;
@@ -22,13 +24,18 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDto getUser(String id) throws Exception {
+    public UserInfoDto getUser(String id) throws Exception {
         UserDto userDto = userDao.getUser(id);
 
         if (isNull(userDto)) {
             throw new UserNotFoundException();
         }
-        return userDto;
+
+        UserInfoDto userInfoDto = UserInfoDto.builder()
+                .id(userDto.getId())
+                .name(userDto.getName())
+                .build();
+        return userInfoDto;
     }
 
     @Override
@@ -50,11 +57,7 @@ public class UserServiceImpl implements UserService {
     public UserDto authenticate(LoginRequestDto loginRequestDto) throws Exception {
         UserDto userDto = userDao.getUser(loginRequestDto.getId());
 
-        if (isNull(userDto)) {
-            throw new UserNotFoundException();
-        }
-
-        if (!passwordEncoder.matches(loginRequestDto.getPassword(), userDto.getPassword())) {
+        if (isNull(userDto) || !passwordEncoder.matches(loginRequestDto.getPassword(), userDto.getPassword())) {
             throw new UserUnauthorizedException();
         }
 
