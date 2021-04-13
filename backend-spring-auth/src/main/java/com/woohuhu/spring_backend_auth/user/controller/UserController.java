@@ -13,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +27,8 @@ import java.util.Map;
 @MapperScan(basePackages = "com.woohuhu.spring_backend_auth.user.dao")
 public class UserController {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    
     @Autowired
     private UserService userService;
 
