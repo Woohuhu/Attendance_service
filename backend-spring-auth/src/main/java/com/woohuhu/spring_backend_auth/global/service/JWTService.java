@@ -1,6 +1,6 @@
 package com.woohuhu.spring_backend_auth.global.service;
 
-import com.woohuhu.spring_backend_auth.user.dto.*;
+import com.woohuhu.spring_backend_auth.user.dto.UserInfoDto;
 
 public interface JWTService {
     String generateAccessToken(UserInfoDto userInfoDto) throws Exception;
