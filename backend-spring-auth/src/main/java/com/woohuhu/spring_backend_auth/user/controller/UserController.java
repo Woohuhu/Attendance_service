@@ -48,7 +48,11 @@ public class UserController {
     @PostMapping("/v1/login")
     public ResponseEntity authenticate(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) throws Exception {
         UserDto userDto = userService.authenticate(loginRequestDto);
-        String accessToken = jwtService.generateAccessToken(userDto);
+        UserInfoDto userInfoDto = UserInfoDto.builder()
+                .id(userDto.getId())
+                .name(userDto.getName())
+                .build();
+        String accessToken = jwtService.generateAccessToken(userInfoDto);
 
         String refreshToken = jwtService.generateRefreshToken(userDto.getId());
         userService.createRefreshToken(userDto.getId(), refreshToken);
@@ -73,24 +77,24 @@ public class UserController {
     @PostMapping("/v1/refreshtoken")
     public ResponseEntity createRefreshToken(@RequestBody Map<String, Object> body, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Cookie cookie = cookieService.getCookie(request, "refreshtoken");
-        UserDto userDto = userService.getUser(body.get("id").toString());
+        UserInfoDto userInfoDto = userService.getUser(body.get("id").toString());
 
         try {
             jwtService.verifyRefreshToken(cookie.getValue());
 
-            String newAccessToken = jwtService.generateAccessToken(userDto);
+            String newAccessToken = jwtService.generateAccessToken(userInfoDto);
 
-            String newRefreshToken = jwtService.generateRefreshToken(userDto.getId());
-            userService.deleteRefreshToken(userDto.getId());
-            userService.createRefreshToken(userDto.getId(), newRefreshToken);
+            String newRefreshToken = jwtService.generateRefreshToken(userInfoDto.getId());
+            userService.deleteRefreshToken(userInfoDto.getId());
+            userService.createRefreshToken(userInfoDto.getId(), newRefreshToken);
 
             Cookie RefreshToken = cookieService.createCookie("refreshtoken", newRefreshToken);
             response.addCookie(RefreshToken);
 
             LoginResponseDto loginResponseDto = LoginResponseDto.builder()
                     .accessToken(newAccessToken)
-                    .id(userDto.getId())
-                    .name(userDto.getName())
+                    .id(userInfoDto.getId())
+                    .name(userInfoDto.getName())
                     .build();
 
             return new ResponseEntity(Response.response(StatusCode.CREATED, "토큰 재발급 성공", loginResponseDto), HttpStatus.CREATED);
