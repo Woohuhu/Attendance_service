@@ -4,4 +4,10 @@ import com.woohuhu.spring_backend_auth.user.dto.UserDto;
 
 public interface JWTService {
     String generateAccessToken(UserDto userDto) throws Exception;
+
+    String generateRefreshToken(String id) throws Exception;
+
+    void verifyAccessToken(String accessToken) throws Exception;
+
+    void verifyRefreshToken(String refreshToken) throws Exception;
 }

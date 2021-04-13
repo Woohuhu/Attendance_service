@@ -1,6 +1,9 @@
 package com.woohuhu.spring_backend_auth.user.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -10,14 +13,13 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Builder
-
-public class LoginRequestDto {
+public class RefreshTokenDto {
+    @NotEmpty
+    @NotBlank
+    @NotNull
+    private String token;
     @NotEmpty
     @NotBlank
     @NotNull
     private String id;
-    @NotEmpty
-    @NotBlank
-    @NotNull
-    private String password;
 }

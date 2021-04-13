@@ -54,10 +54,26 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException();
         }
 
-        if(!passwordEncoder.matches(loginRequestDto.getPassword(), userDto.getPassword())) {
+        if (!passwordEncoder.matches(loginRequestDto.getPassword(), userDto.getPassword())) {
             throw new UserUnauthorizedException();
         }
 
         return userDto;
+    }
+
+    @Override
+    public int createRefreshToken(String id, String refreshToken) throws Exception {
+        RefreshTokenDto newRefreshToken = RefreshTokenDto.builder()
+                .id(id)
+                .token(refreshToken)
+                .build();
+        return userDao.createRefreshToken(newRefreshToken);
+    }
+
+    @Override
+    public int deleteRefreshToken(String id) throws Exception {
+        int result = userDao.deleteRefreshToken(id);
+
+        return result;
     }
 }
