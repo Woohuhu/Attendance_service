@@ -1,7 +1,6 @@
 package com.woohuhu.spring_backend_auth.user.dao;
 
-import com.woohuhu.spring_backend_auth.user.dto.RefreshTokenDto;
-import com.woohuhu.spring_backend_auth.user.dto.UserDto;
+import com.woohuhu.spring_backend_auth.user.dto.*;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -12,7 +11,7 @@ public interface UserDao {
 
     int createRefreshToken(RefreshTokenDto refreshTokenDto) throws Exception;
 
-    int getRefreshToken(String id) throws Exception;
+    RefreshTokenDto getRefreshToken(String id) throws Exception;
 
     int deleteRefreshToken(String id) throws Exception;
 }
