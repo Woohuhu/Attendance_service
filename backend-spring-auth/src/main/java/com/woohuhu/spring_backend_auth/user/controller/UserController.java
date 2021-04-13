@@ -1,5 +1,7 @@
 package com.woohuhu.spring_backend_auth.user.controller;
 
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.woohuhu.spring_backend_auth.global.dto.*;
 import com.woohuhu.spring_backend_auth.global.service.*;
 import com.woohuhu.spring_backend_auth.user.dto.*;
@@ -12,8 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Map;
 
 @RestController
 @EnableAutoConfiguration
@@ -64,5 +68,36 @@ public class UserController {
     public ResponseEntity deleteRefreshToken(@PathVariable @Valid String id) throws Exception {
         Object result = userService.deleteRefreshToken(id);
         return new ResponseEntity(Response.response(StatusCode.OK, "토큰 삭제 성공", result), HttpStatus.OK);
+    }
+
+    @PostMapping("/v1/refreshtoken")
+    public ResponseEntity createRefreshToken(@RequestBody Map<String, Object> body, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Cookie cookie = cookieService.getCookie(request, "refreshtoken");
+        UserDto userDto = userService.getUser(body.get("id").toString());
+
+        try {
+            jwtService.verifyRefreshToken(cookie.getValue());
+
+            String newAccessToken = jwtService.generateAccessToken(userDto);
+
+            String newRefreshToken = jwtService.generateRefreshToken(userDto.getId());
+            userService.deleteRefreshToken(userDto.getId());
+            userService.createRefreshToken(userDto.getId(), newRefreshToken);
+
+            Cookie RefreshToken = cookieService.createCookie("refreshtoken", newRefreshToken);
+            response.addCookie(RefreshToken);
+
+            LoginResponseDto loginResponseDto = LoginResponseDto.builder()
+                    .accessToken(newAccessToken)
+                    .id(userDto.getId())
+                    .name(userDto.getName())
+                    .build();
+
+            return new ResponseEntity(Response.response(StatusCode.CREATED, "토큰 재발급 성공", loginResponseDto), HttpStatus.CREATED);
+        } catch (JWTVerificationException e) {
+            return new ResponseEntity(Response.response(StatusCode.UNAUTHORIZED, "토큰 만료"), HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return new ResponseEntity(Response.response(StatusCode.FORBIDDEN, "토큰 재발급 실패"), HttpStatus.FORBIDDEN);
+        }
     }
 }
