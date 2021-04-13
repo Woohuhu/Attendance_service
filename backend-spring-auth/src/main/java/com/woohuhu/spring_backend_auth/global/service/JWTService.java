@@ -7,7 +7,7 @@ public interface JWTService {
 
     String generateRefreshToken(String id) throws Exception;
 
-    String verifyAccessToken(String accessToken) throws Exception;
+    void verifyAccessToken(String accessToken) throws Exception;
 
-    String verifyRefreshToken(String refreshToken) throws Exception;
+    void verifyRefreshToken(String refreshToken) throws Exception;
 }

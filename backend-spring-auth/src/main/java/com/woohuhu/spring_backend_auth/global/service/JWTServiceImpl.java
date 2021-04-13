@@ -61,28 +61,26 @@ public class JWTServiceImpl implements JWTService {
     }
 
     @Override
-    public String verifyAccessToken(String accessToken) {
+    public void verifyAccessToken(String accessToken) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(AccessTokenSecretKey);
             JWTVerifier verifier = JWT.require(algorithm)
                     .acceptExpiresAt(AccessTokenExpires)
                     .build();
-            DecodedJWT jwt = verifier.verify(accessToken);
-            return jwt.toString();
+            verifier.verify(accessToken);
         } catch (JWTVerificationException exception) {
             throw exception;
         }
     }
 
     @Override
-    public String verifyRefreshToken(String refreshToken) {
+    public void verifyRefreshToken(String refreshToken) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(RefreshTokenSecretKey);
             JWTVerifier verifier = JWT.require(algorithm)
                     .acceptExpiresAt(RefreshTokenExpires)
                     .build();
-            DecodedJWT jwt = verifier.verify(refreshToken);
-            return jwt.toString();
+            verifier.verify(refreshToken);
         } catch (JWTVerificationException exception) {
             throw exception;
         }
