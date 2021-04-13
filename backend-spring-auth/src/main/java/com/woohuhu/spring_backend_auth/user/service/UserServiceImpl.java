@@ -55,11 +55,7 @@ public class UserServiceImpl implements UserService {
     public UserDto authenticate(LoginRequestDto loginRequestDto) throws Exception {
         UserDto userDto = userDao.getUser(loginRequestDto.getId());
 
-        if (isNull(userDto)) {
-            throw new UserNotFoundException();
-        }
-
-        if (!passwordEncoder.matches(loginRequestDto.getPassword(), userDto.getPassword())) {
+        if (isNull(userDto) || !passwordEncoder.matches(loginRequestDto.getPassword(), userDto.getPassword())) {
             throw new UserUnauthorizedException();
         }
 
