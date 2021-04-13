@@ -22,13 +22,18 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDto getUser(String id) throws Exception {
+    public UserInfoDto getUser(String id) throws Exception {
         UserDto userDto = userDao.getUser(id);
 
         if (isNull(userDto)) {
             throw new UserNotFoundException();
         }
-        return userDto;
+
+        UserInfoDto userInfoDto = UserInfoDto.builder()
+                .id(userDto.getId())
+                .name(userDto.getName())
+                .build();
+        return userInfoDto;
     }
 
     @Override

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface UserService {
-    UserDto getUser(String id) throws Exception;
+    UserInfoDto getUser(String id) throws Exception;
 
     int createUser(UserDto userDto) throws Exception;
 
