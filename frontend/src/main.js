@@ -12,7 +12,7 @@ Vue.config.productionTip = false;
 
 const options = {
   isEnabled: true,
-  logLevel: isProduction ? "error" : "debud",
+  logLevel: isProduction ? "error" : "debug",
   stringifyArguments: false,
   showLogLevel: true,
   showMethodName: true,
