@@ -18,6 +18,11 @@ export default new Vuex.Store({
       state.name = user.name;
       state.accesstoken = user.accesstoken;
     },
+    Logout(state) {
+      state.id = null;
+      state.name = null;
+      state.accessToken = null;
+    },
   },
   actions: {
     async Login(context, { id, password }) {
@@ -27,6 +32,9 @@ export default new Vuex.Store({
       });
       const user = result.data.data;
       return context.commit("Login", user);
+    },
+    async Logout(context) {
+      return context.commit("Logout");
     },
   },
   modules: {},
