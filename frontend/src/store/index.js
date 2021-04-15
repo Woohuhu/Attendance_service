@@ -10,13 +10,13 @@ export default new Vuex.Store({
   state: {
     id: null,
     name: null,
-    accesstoken: null,
+    accessToken: null,
   },
   mutations: {
     Login(state, user) {
       state.id = user.id;
       state.name = user.name;
-      state.accesstoken = user.accesstoken;
+      state.accessToken = user.accessToken;
     },
     Logout(state) {
       state.id = null;
@@ -30,6 +30,7 @@ export default new Vuex.Store({
         id,
         password,
       });
+
       const user = result.data.data;
       return context.commit("Login", user);
     },
