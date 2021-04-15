@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
+import $axiosAuth from "./../service/global/axios.auth";
 
 Vue.use(Vuex);
 
@@ -20,11 +21,11 @@ export default new Vuex.Store({
   },
   actions: {
     async Login(context, { id, password }) {
-      const result = await this.$axiosAuth.post("/v1/login", {
+      const result = await $axiosAuth.post("/v1/login", {
         id,
         password,
       });
-      const user = result.data;
+      const user = result.data.data;
       return context.commit("Login", user);
     },
   },
