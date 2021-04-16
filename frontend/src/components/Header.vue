@@ -19,7 +19,11 @@
             </v-btn>
           </v-col>
 
-          <v-col class="text-right" cols="4">
+          <v-col
+            v-if="$store.state.accessToken === null"
+            class="text-right"
+            cols="4"
+          >
             <v-btn
               v-for="link in links_right"
               :key="link.name"
@@ -28,6 +32,13 @@
             >
               {{ link.name }}
             </v-btn>
+          </v-col>
+          <v-col
+            v-if="$store.state.accessToken !== null"
+            class="text-right"
+            cols="4"
+          >
+            <v-btn text @click="$store.commit('Logout')">로그아웃</v-btn>
           </v-col>
         </v-row>
 
