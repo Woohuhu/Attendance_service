@@ -68,9 +68,23 @@
         </v-row>
       </v-col>
     </v-row>
+    <v-snackbar
+      class="text-center"
+      v-model="snackbar.show"
+      :timeout="2000"
+      :color="snackbar.color"
+    >
+      {{ snackbar.text }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="white" text v-bind="attrs" @click="snackbar.show = false">
+          닫기
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 <script>
+import { UserService } from "./../../service/user/user.service";
 export default {
   name: "signup",
   data: function () {
@@ -84,6 +98,11 @@ export default {
         id: "",
         name: "",
         password: "",
+      },
+      snackbar: {
+        show: false,
+        text: "",
+        color: "",
       },
     };
   },
@@ -105,16 +124,17 @@ export default {
         return;
       }
       try {
-        const { id, name, password } = this.user;
-        await this.$axiosAuth.post("/v1/user", {
-          id,
-          name,
-          password,
-        });
+        await UserService.createUser(this.user);
         return this.$router.push("/login");
       } catch (error) {
-        this.errorMsg = "회원가입 실패";
+        this.$log.error(error);
+        this.openSnackbar("회원가입 실패", "error");
       }
+    },
+    openSnackbar(text, color) {
+      this.snackbar.text = text;
+      this.snackbar.color = color;
+      this.snackbar.show = true;
     },
   },
 };
