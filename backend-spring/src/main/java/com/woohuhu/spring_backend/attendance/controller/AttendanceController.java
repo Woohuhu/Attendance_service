@@ -29,10 +29,9 @@ public class AttendanceController {
             logger.info("in!!");
             attendanceService.createAttendance(attendanceDto);
             return new ResponseEntity(Response.response(StatusCode.OK, "출석체크 성공"), HttpStatus.CREATED);
-        }catch (Exception e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity(Response.response(StatusCode.NOT_FOUND, "출석체크 실패"), HttpStatus.NOT_FOUND);
         }
     }
-
 }
