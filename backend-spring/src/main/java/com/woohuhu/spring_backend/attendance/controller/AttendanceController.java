@@ -26,7 +26,6 @@ public class AttendanceController {
     @PostMapping("/v1/attendance")
     public ResponseEntity createAttendance(@RequestBody AttendanceDto attendanceDto) throws Exception {
         try {
-            logger.info("in!!");
             attendanceService.createAttendance(attendanceDto);
             return new ResponseEntity(Response.response(StatusCode.OK, "출석체크 성공"), HttpStatus.CREATED);
         } catch (Exception e) {
