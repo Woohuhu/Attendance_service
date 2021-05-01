@@ -10,11 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/v1/attendance")
 @EnableAutoConfiguration
 public class AttendanceController {
 
@@ -23,7 +24,7 @@ public class AttendanceController {
     @Autowired
     private AttendanceService attendanceService;
 
-    @PostMapping("/v1/attendance")
+    @PostMapping("")
     public ResponseEntity createAttendance(@RequestBody AttendanceDto attendanceDto) throws Exception {
         try {
             attendanceService.createAttendance(attendanceDto);
@@ -33,4 +34,17 @@ public class AttendanceController {
             return new ResponseEntity(Response.response(StatusCode.NOT_FOUND, "출석체크 실패"), HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity getAttendanceById(@PathVariable @Valid String id) throws Exception {
+        try {
+            Object result = attendanceService.getAttendanceById(id);
+            return new ResponseEntity(Response.response(StatusCode.OK, "출석 정보 조회 성공", result), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity(Response.response(StatusCode.NOT_FOUND, "출석 정보 조회 실패"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 }
