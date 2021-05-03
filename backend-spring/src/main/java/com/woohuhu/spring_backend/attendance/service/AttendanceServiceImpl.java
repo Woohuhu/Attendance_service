@@ -47,4 +47,14 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
         return attendances;
     }
+
+    @Override
+    public AttendanceDto updateAttendanceState(AttendanceDto attendanceDto) throws Exception {
+        Boolean user = userRepository.existsById(attendanceDto.getId());
+        if (!user) {
+            throw new UserNotFoundException();
+        }
+        attendanceRepository.updateAttendanceState(attendanceDto.getId(), attendanceDto.getDate(), attendanceDto.getState());
+        return attendanceDto;
+    }
 }

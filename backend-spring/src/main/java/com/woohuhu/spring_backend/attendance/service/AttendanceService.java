@@ -13,4 +13,6 @@ public interface AttendanceService {
     List<Attendance> getAttendanceById(String id) throws Exception;
 
     List<Attendance> getAttendanceByDate(String date) throws Exception;
+
+    AttendanceDto updateAttendanceState(AttendanceDto attendanceDto) throws Exception;
 }
