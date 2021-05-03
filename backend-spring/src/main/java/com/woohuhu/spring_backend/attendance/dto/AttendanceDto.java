@@ -1,8 +1,11 @@
 package com.woohuhu.spring_backend.attendance.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.persistence.*;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @Getter
@@ -10,8 +13,6 @@ import javax.persistence.*;
 @Builder
 public class AttendanceDto {
     private String id;
-    private java.util.Date date;
+    private LocalDate date;
     private String state;
-
-
 }
