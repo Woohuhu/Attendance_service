@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/v1/attendance")
@@ -54,6 +55,19 @@ public class AttendanceController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity(Response.response(StatusCode.NOT_FOUND, "날짜별 출석 정보 조회 실패"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PatchMapping("/date/{date}/id/{id}")
+    public ResponseEntity UpdateAttendanceState(@RequestBody @Valid AttendanceDto attendanceDto, @PathVariable @Valid String date, @PathVariable @Valid String id) throws Exception {
+        try {
+            attendanceDto.setDate(LocalDate.parse(date));
+            attendanceDto.setId(id);
+            Object result = attendanceService.updateAttendanceState(attendanceDto);
+            return new ResponseEntity(Response.response(StatusCode.OK, "출석 정보 업데이트 성공", result), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity(Response.response(StatusCode.NOT_FOUND, "출석 정보 업데이트 실패"), HttpStatus.NOT_FOUND);
         }
     }
 
