@@ -4,11 +4,12 @@ import com.woohuhu.spring_backend.attendance.Entity.Attendance;
 import com.woohuhu.spring_backend.attendance.dao.AttendanceRepository;
 import com.woohuhu.spring_backend.attendance.dao.UserRepository;
 import com.woohuhu.spring_backend.attendance.dto.AttendanceDto;
+import com.woohuhu.spring_backend.attendance.exeption.AttendanceNotFoundException;
 import com.woohuhu.spring_backend.attendance.exeption.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         Attendance attendance = Attendance.builder()
                 .state(attendanceDto.getState())
                 .id(attendanceDto.getId())
-                .date(new Timestamp(attendanceDto.getDate().getTime()))
+                .date(attendanceDto.getDate())
                 .build();
         attendanceRepository.save(attendance);
         return attendanceDto;
@@ -35,6 +36,15 @@ public class AttendanceServiceImpl implements AttendanceService {
             throw new UserNotFoundException();
         }
         List<Attendance> attendances = attendanceRepository.findAllById(id);
+        return attendances;
+    }
+
+    @Override
+    public List<Attendance> getAttendanceByDate(String date) throws Exception {
+        List<Attendance> attendances = attendanceRepository.findAllByDate(LocalDate.parse(date));
+        if (attendances.isEmpty()) {
+            throw new AttendanceNotFoundException();
+        }
         return attendances;
     }
 }
