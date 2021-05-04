@@ -14,14 +14,14 @@ export class UserController {
     }
   };
 
-  static refreshToken = async (req) =>{
-    try{
-      const {id} = req;
-      return await axiosAuth.post("/v1/refreshtoken",{
-        id
+  static refreshToken = async (req) => {
+    try {
+      const { id } = req;
+      return await axiosAuth.post("/v1/refreshtoken", {
+        id,
       });
-    }catch(error){
+    } catch (error) {
       throw new Error(error);
     }
-  }
+  };
 }

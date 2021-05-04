@@ -10,12 +10,12 @@ export class UserService {
     }
   };
 
-  static refreshToken = async (req)=>{
-    try{
+  static refreshToken = async (req) => {
+    try {
       const result = await UserController.refreshToken(req);
       return result.data;
-    }catch(error){
+    } catch (error) {
       throw new Error(error);
     }
-  }
+  };
 }
