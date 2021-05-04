@@ -4,8 +4,8 @@ import com.woohuhu.spring_backend.attendance.Entity.Attendance;
 import com.woohuhu.spring_backend.attendance.dao.AttendanceRepository;
 import com.woohuhu.spring_backend.attendance.dao.UserRepository;
 import com.woohuhu.spring_backend.attendance.dto.AttendanceDto;
-import com.woohuhu.spring_backend.attendance.exeption.AttendanceNotFoundException;
-import com.woohuhu.spring_backend.attendance.exeption.UserNotFoundException;
+import com.woohuhu.spring_backend.attendance.exception.AttendanceNotFoundException;
+import com.woohuhu.spring_backend.attendance.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
