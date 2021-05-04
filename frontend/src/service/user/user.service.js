@@ -9,4 +9,13 @@ export class UserService {
       throw new Error(error);
     }
   };
+
+  static refreshToken = async (req)=>{
+    try{
+      const result = await UserController.refreshToken(req);
+      return result.data;
+    }catch(error){
+      throw new Error(error);
+    }
+  }
 }
