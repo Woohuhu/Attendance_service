@@ -1,4 +1,4 @@
-package com.woohuhu.spring_backend.attendance.exeption;
+package com.woohuhu.spring_backend.attendance.exception;
 
 public class AttendanceNotFoundException extends RuntimeException {
 
