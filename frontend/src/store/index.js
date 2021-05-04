@@ -25,6 +25,9 @@ export default new Vuex.Store({
       state.accessToken = null;
       router.push("/login").catch(() => {});
     },
+    RefreshToken(state, accessToken) {
+      state.accessToken = accessToken;
+    },
   },
   actions: {
     async Login(context, { id, password }) {
