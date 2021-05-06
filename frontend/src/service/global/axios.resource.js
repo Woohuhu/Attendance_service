@@ -1,7 +1,7 @@
 import axios from "axios";
-import VueLogger from "vuejs-logger";
-import store from "../store/index";
-import UserService from "../user/user.service";
+//import VueLogger from "vuejs-logger";
+import store from "../../store/index";
+import { UserService } from "../user/user.service";
 
 const axiosResource = axios.create({
   baseURL:
@@ -18,8 +18,9 @@ axiosResource.interceptors.request.use(
         Authorization: "Bearer " + store.state.accessToken,
       };
     } catch (err) {
-      VueLogger.error(err);
+      //VueLogger.error(err);
     }
+    console.log(config);
     return await config;
   },
   function (error) {
@@ -29,9 +30,11 @@ axiosResource.interceptors.request.use(
 
 axiosResource.interceptors.response.use(
   function (response) {
+    console.log(response);
     return response;
   },
   async function (error) {
+    console.log(error);
     const result = error.config;
     if (error.response.status === 401 && result.retry != true) {
       result.retry = true;
@@ -45,6 +48,7 @@ axiosResource.interceptors.response.use(
 
       return await axiosResource(result);
     }
+    console.log("here");
     return Promise.reject(error);
   }
 );
