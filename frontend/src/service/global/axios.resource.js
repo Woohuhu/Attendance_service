@@ -1,7 +1,6 @@
 import axios from "axios";
-import VueLogger from "vuejs-logger";
-import store from "../store/index";
-import UserService from "../user/user.service";
+import store from "../../store/index";
+import { UserService } from "../user/user.service";
 
 const axiosResource = axios.create({
   baseURL:
@@ -18,7 +17,7 @@ axiosResource.interceptors.request.use(
         Authorization: "Bearer " + store.state.accessToken,
       };
     } catch (err) {
-      VueLogger.error(err);
+      this.$log.error(err);
     }
     return await config;
   },
