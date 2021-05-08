@@ -22,3 +22,16 @@ export default {
   }),
 };
 </script>
+
+<style>
+@font-face {
+  font-family: "MapoBackpacking";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/MapoBackpackingA.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+#app {
+  font-family: "MapoBackpacking";
+}
+</style>
