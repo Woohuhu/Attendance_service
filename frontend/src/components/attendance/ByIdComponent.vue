@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row align="center" justify="center">
-      <v-chip class="ma-5 pa-5" :input-value="active" filter color="white">
+      <v-chip class="ma-5 pa-5" filter color="white">
         {{ this.$store.state.name }}의 출석현황
       </v-chip>
     </v-row>
@@ -53,9 +53,6 @@
 <script>
 export default {
   props: ["attendance"],
-  data: () => ({
-    active: "",
-  }),
   methods: {
     getStateMessage(state) {
       if (state == "attendance") return "출석";
