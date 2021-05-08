@@ -9,4 +9,14 @@ export class AttendanceController {
       throw new Error(error);
     }
   };
+
+  static getAttendanceById = async (id) => {
+    try {
+      const result = await axiosResource.get(`/v1/attendance/${id}`);
+      return result.data;
+    } catch (error) {
+      this.$log.debug(error);
+      throw new Error(error);
+    }
+  };
 }
