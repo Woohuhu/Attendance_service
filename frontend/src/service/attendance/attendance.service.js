@@ -6,6 +6,7 @@ export class AttendanceService {
       const result = await AttendanceController.getAttendanceByDate(date);
       return result.data;
     } catch (error) {
+      this.$log.debug(error);
       throw new Error(error);
     }
   };
