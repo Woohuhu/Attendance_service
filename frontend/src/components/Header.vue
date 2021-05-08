@@ -4,11 +4,13 @@
       <v-container class="py-0">
         <v-row align="center" justify="center">
           <v-col cols="8">
-            <v-avatar
-              class="mr-10 justify-center"
-              color="teal darken-1"
-              size="32"
-            ></v-avatar>
+            <img
+              src="https://user-images.githubusercontent.com/43667316/117254945-09e74680-ae84-11eb-81ea-2e42105fe7b6.png"
+              alt="logo"
+              width="150px"
+              height="50px"
+              align="center"
+            />
             <v-btn
               v-for="link in links_left"
               :key="link.name"
@@ -58,11 +60,11 @@ export default {
       },
       {
         name: "출석현황(일별)",
-        url: "/attendance",
+        url: "/attendance/date",
       },
       {
         name: "출석현황(사용자별)",
-        url: "/attendance",
+        url: "/attendance/user",
       },
     ],
     links_right: [

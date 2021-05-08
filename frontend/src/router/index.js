@@ -39,6 +39,14 @@ const routes = [
         /* webpackChunkName: "AttendanceByDate" */ "../views/attendance/AttendanceByDate.vue"
       ),
   },
+  {
+    path: "/attendance/user",
+    name: "AttendanceById",
+    component: () =>
+      import(
+        /* webpackChunkName: "AttendanceById" */ "../views/attendance/AttendanceById.vue"
+      ),
+  },
 ];
 
 const router = new VueRouter({
