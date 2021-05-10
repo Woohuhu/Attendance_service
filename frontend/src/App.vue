@@ -34,4 +34,7 @@ export default {
 #app {
   font-family: "MapoBackpacking";
 }
+span {
+  font-family: "MapoBackpacking";
+}
 </style>
