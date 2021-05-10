@@ -45,7 +45,7 @@
                   color="#426dad"
                   class="subtitle-1 white--text"
                 >
-                  회원가입
+                  <span>회원가입</span>
                 </v-btn>
                 <v-btn
                   @click="onLogin"
@@ -53,7 +53,7 @@
                   color="#426dad"
                   class="subtitle-1 white--text"
                 >
-                  로그인
+                  <span>로그인</span>
                 </v-btn>
               </v-card-actions>
             </v-card>
