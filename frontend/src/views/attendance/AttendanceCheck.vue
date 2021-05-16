@@ -1,6 +1,11 @@
 <template>
   <v-container>
-    <v-row class="ma-5" align="center" justify="center">
+    <v-row
+      class="ma-5"
+      align="center"
+      justify="center"
+      v-if="attendance.starter != this.$store.state.id && attendance.state"
+    >
       <v-card
         class="px-7 pt-7 pb-4 text-center d-inline-block"
         color="teal darken-3"
@@ -12,17 +17,17 @@
         </div>
 
         <v-text-field
-          v-model="attendance.code"
+          v-model="attendance.input"
           :rules="[rules.required, rules.length]"
           single-line
           hide-details
           class="centered-input title"
         ></v-text-field>
 
-        <v-btn class="ma-1" plain> 출석하기 </v-btn>
+        <v-btn class="ma-1" plain v-on:click="attend()"> 출석하기 </v-btn>
       </v-card>
     </v-row>
-    <v-row class="ma-5" align="center" justify="center">
+    <v-row class="ma-5" align="center" justify="center" v-if="attendance.state">
       <v-card
         class="px-7 pt-7 pb-4 text-center d-inline-block"
         color="teal darken-3"
@@ -34,21 +39,35 @@
         </div>
         <span class="centered-input display-4">{{ attendance.code }}</span>
         <v-spacer></v-spacer>
-        <v-btn class="ma-1" plain> 종료하기 </v-btn>
+        <v-btn
+          class="ma-1"
+          plain
+          v-if="attendance.starter == this.$store.state.id"
+          v-on:click="stopAttendance()"
+        >
+          종료하기
+        </v-btn>
       </v-card>
     </v-row>
-    <v-row class="ma-5" align="center" justify="center">
+    <v-row
+      class="ma-5"
+      align="center"
+      justify="center"
+      v-if="attendance.state == false"
+    >
       <v-card
         class="px-7 pt-4 pb-4 text-center d-inline-block"
         color="teal darken-3"
         width="60%"
         dark
       >
-        <v-btn class="ma-1" plain> 시작하기 </v-btn>
+        <v-btn class="ma-1" plain v-on:click="startAttendance()">
+          시작하기
+        </v-btn>
       </v-card>
     </v-row>
     <!-- 출석사용자 리스트 -->
-    <v-row>
+    <v-row v-if="attendance.state">
       <template>
         <v-container fluid style="width: 70%">
           <v-card
@@ -95,6 +114,8 @@
 </template>
 <script>
 import UserListComponent from "../../components/attendance/UserListComponent";
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
 
 export default {
   name: "AttendanceCheck",
@@ -109,6 +130,7 @@ export default {
         starter: "",
         code: "",
         input: "",
+        time: "",
       },
       rules: {
         required: (value) => !!value || "값을 입력해주세요.",
@@ -116,12 +138,70 @@ export default {
       },
     };
   },
-  async created() {},
+  async created() {
+    let socket = new SockJS("http://localhost:2000/socket");
+    this.stompClient = Stomp.over(socket);
+    this.stompClient.connect({}, function (frame) {
+      this.connected = true;
+      this.$log.info("Connected : " + frame);
+      this.stompClient.send("/join", {}, JSON.stringify({}));
+
+      this.stompClient.subscribe("/join", function (res) {
+        const result = JSON.parse(res.body);
+        this.attendance.userInfo = result.attendanceUserList;
+        this.attendance.state = result.isAttendance;
+        this.attendance.time = result.time;
+      });
+
+      this.stompClient.subscribe("/start", function (res) {
+        const result = JSON.parse(res.body);
+        this.attendance.state = result.isAttendance;
+        this.attendance.starter = result.adminId;
+        this.attendance.time = result.time;
+      });
+
+      this.stompClient.subscribe("/attendance", function (res) {
+        const result = JSON.parse(res.body);
+        this.$log.info(result);
+        this.attendance.userInfo.push(result);
+      });
+    });
+  },
   methods: {
     openSnackbar(text, color) {
       this.snackbar.text = text;
       this.snackbar.color = color;
       this.snackbar.show = true;
+    },
+    async startAttendance() {
+      this.attendance.code = Math.floor(Math.random() * 900) + 100;
+      this.stompClient.send(
+        "/start",
+        {},
+        JSON.stringify({
+          code: this.attendance.code,
+          adminId: this.$store.state.id,
+        })
+      );
+      this.attendance.state = true;
+    },
+    async attend() {
+      this.stompClient.send(
+        "/attendance",
+        {},
+        JSON.stringify({
+          code: this.attendance.input,
+          id: this.$store.state.id,
+          name: this.$store.state,
+        })
+      );
+    },
+    async stopAttendance() {
+      if (this.stompClient !== null) {
+        this.stompClient.disconnec();
+      }
+      this.connected = false;
+      this.$log.info("Disconnected");
     },
   },
 };
