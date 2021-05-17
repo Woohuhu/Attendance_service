@@ -139,28 +139,28 @@ export default {
     };
   },
   async created() {
-    let socket = new SockJS("http://localhost:2000/socket");
+    let socket = new SockJS("http://localhost:2000/api/socket");
     this.stompClient = Stomp.over(socket);
-    this.stompClient.connect({}, function (frame) {
+    this.stompClient.connect({}, (frame) => {
       this.connected = true;
       this.$log.info("Connected : " + frame);
       this.stompClient.send("/join", {}, JSON.stringify({}));
 
-      this.stompClient.subscribe("/join", function (res) {
+      this.stompClient.subscribe("/join", (res) => {
         const result = JSON.parse(res.body);
         this.attendance.userInfo = result.attendanceUserList;
         this.attendance.state = result.isAttendance;
         this.attendance.time = result.time;
       });
 
-      this.stompClient.subscribe("/start", function (res) {
+      this.stompClient.subscribe("/start", (res) => {
         const result = JSON.parse(res.body);
         this.attendance.state = result.isAttendance;
         this.attendance.starter = result.adminId;
         this.attendance.time = result.time;
       });
 
-      this.stompClient.subscribe("/attendance", function (res) {
+      this.stompClient.subscribe("/attendance", (res) => {
         const result = JSON.parse(res.body);
         this.$log.info(result);
         this.attendance.userInfo.push(result);
@@ -198,7 +198,7 @@ export default {
     },
     async stopAttendance() {
       if (this.stompClient !== null) {
-        this.stompClient.disconnec();
+        this.stompClient.disconnected();
       }
       this.connected = false;
       this.$log.info("Disconnected");
