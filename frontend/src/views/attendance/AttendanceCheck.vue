@@ -27,7 +27,12 @@
         <v-btn class="ma-1" plain v-on:click="attend()"> 출석하기 </v-btn>
       </v-card>
     </v-row>
-    <v-row class="ma-5" align="center" justify="center" v-if="attendance.state">
+    <v-row
+      class="ma-5"
+      align="center"
+      justify="center"
+      v-if="attendance.starter == this.$store.state.id && attendance.state"
+    >
       <v-card
         class="px-7 pt-7 pb-4 text-center d-inline-block"
         color="teal darken-3"
@@ -39,12 +44,7 @@
         </div>
         <span class="centered-input display-4">{{ attendance.code }}</span>
         <v-spacer></v-spacer>
-        <v-btn
-          class="ma-1"
-          plain
-          v-if="attendance.starter == this.$store.state.id"
-          v-on:click="stopAttendance()"
-        >
+        <v-btn class="ma-1" plain v-on:click="stopAttendance()">
           종료하기
         </v-btn>
       </v-card>
@@ -144,19 +144,20 @@ export default {
     this.stompClient.connect({}, (frame) => {
       this.connected = true;
       this.$log.info("Connected : " + frame);
-      this.stompClient.send("/join", {}, JSON.stringify({}));
+      this.stompClient.send("/join", JSON.stringify({}), {});
 
       this.stompClient.subscribe("/join", (res) => {
         const result = JSON.parse(res.body);
         this.attendance.userInfo = result.attendanceUserList;
         this.attendance.state = result.isAttendance;
         this.attendance.time = result.time;
+        this.attendance.starter = result.starter;
       });
 
       this.stompClient.subscribe("/start", (res) => {
         const result = JSON.parse(res.body);
         this.attendance.state = result.isAttendance;
-        this.attendance.starter = result.adminId;
+        this.attendance.starter = result.starter;
         this.attendance.time = result.time;
       });
 
@@ -173,30 +174,30 @@ export default {
       this.snackbar.color = color;
       this.snackbar.show = true;
     },
-    async startAttendance() {
+    startAttendance() {
       this.attendance.code = Math.floor(Math.random() * 900) + 100;
       this.stompClient.send(
         "/start",
-        {},
         JSON.stringify({
           code: this.attendance.code,
-          adminId: this.$store.state.id,
-        })
+          starter: this.$store.state.id,
+        }),
+        {}
       );
       this.attendance.state = true;
     },
-    async attend() {
+    attend() {
       this.stompClient.send(
         "/attendance",
-        {},
         JSON.stringify({
           code: this.attendance.input,
           id: this.$store.state.id,
           name: this.$store.state,
-        })
+        }),
+        {}
       );
     },
-    async stopAttendance() {
+    stopAttendance() {
       if (this.stompClient !== null) {
         this.stompClient.disconnected();
       }
