@@ -14,6 +14,6 @@ import java.util.ArrayList;
 public class AttendanceJoinResponseDto {
     private final ArrayList<String> attendanceUserList;
     private final Boolean isAttendance;
-    private final String adminId;
+    private final String starter;
     private final Integer time;
 }

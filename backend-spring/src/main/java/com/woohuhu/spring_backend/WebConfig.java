@@ -12,7 +12,8 @@ public class WebConfig implements WebMvcConfigurer {
     private static final String[] EXCLUDE_PATHS = {
             "/login/**",
             "/signup/**",
-            "/socket/**"
+            "/socket/**",
+            "/user/**"
     };
 
     @Autowired

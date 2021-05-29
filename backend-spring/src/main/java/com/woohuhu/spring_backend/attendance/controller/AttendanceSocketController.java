@@ -4,6 +4,9 @@ import com.woohuhu.spring_backend.attendance.dto.*;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.ArrayList;
 
 @Controller
 public class AttendanceSocketController {
@@ -11,12 +14,17 @@ public class AttendanceSocketController {
     @SendTo("/join")
     public AttendanceJoinResponseDto joinAttendanceCheck() throws Exception {
         //TODO 넘겨받은 데이터 Redis 저장 과정
-        AttendanceJoinResponseDto attendanceJoinResponseDto = AttendanceJoinResponseDto.builder()
-                .isAttendance(false)
-                .adminId("")
-                .time(360000)
-                .build();
-        return attendanceJoinResponseDto;
+        try {
+            AttendanceJoinResponseDto attendanceJoinResponseDto = AttendanceJoinResponseDto.builder()
+                    .isAttendance(false)
+                    .attendanceUserList(new ArrayList<>())
+                    .starter("hschoi1104")
+                    .time(360001)
+                    .build();
+            return attendanceJoinResponseDto;
+        }catch(Exception e){
+            throw e;
+        }
     }
 
     @MessageMapping("/start")
@@ -25,7 +33,7 @@ public class AttendanceSocketController {
         //TODO 넘겨받은 데이터 Redis 저장 과정
         AttendanceStartResponseDto attendanceStartResponseDto = AttendanceStartResponseDto.builder()
                 .isAttendance(true)
-                .adminId(attendanceStartRequestDto.getAdminId())
+                .starter(attendanceStartRequestDto.getStarter())
                 .time(360000)
                 .build();
         return attendanceStartResponseDto;
